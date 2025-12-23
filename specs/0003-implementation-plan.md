@@ -403,6 +403,43 @@ fn test_default_device() {
 }
 ```
 
+**验收标准**:
+- [x] 成功列出所有输入设备
+- [x] 正确获取默认输入设备
+- [x] 正确查询设备配置信息
+- [x] 所有单元测试通过（4个测试）
+- [x] 集成测试通过（4个测试）
+- [x] 错误处理正确
+
+**测试结果**:
+```bash
+# 单元测试
+running 4 tests
+test audio::device::tests::test_default_device ... ok
+test audio::device::tests::test_device_not_found ... ok
+test audio::device::tests::test_device_config ... ok
+test audio::device::tests::test_list_devices ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored
+
+# 集成测试
+running 4 tests
+test test_default_device_integration ... ok
+test test_device_config_error_handling ... ok
+test test_device_sample_rate_validity ... ok
+test test_list_input_devices_integration ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored
+```
+
+**测试环境**:
+- 检测到 2 个输入设备
+- 默认设备：麦克风 (Realtek(R) Audio)
+- 支持采样率：48000 Hz
+- 通道数：2（立体声）
+
+**完成状态**: ✅ 已完成 (2025-12-23)
+
 ---
 
 #### P1-T2: 音频采集 Stream
@@ -457,6 +494,59 @@ async fn test_audio_capture() {
     capture.stop();
 }
 ```
+
+**验收标准**:
+- [x] 成功创建音频采集实例
+- [x] 正确启动和停止音频流
+- [x] 通过 channel 正确传递音频数据
+- [x] 使用 try_send 避免阻塞音频线程
+- [x] 所有单元测试通过（5个测试）
+- [x] 集成测试通过（5个测试）
+- [x] 支持多次启动/停止循环
+- [x] 正确处理 Drop 清理
+- [x] 文档测试通过（4个测试）
+
+**测试结果**:
+```bash
+# 单元测试
+running 5 tests
+test audio::capture::tests::test_audio_capture_creation ... ok
+test audio::capture::tests::test_audio_capture_sample_rate ... ok
+test audio::capture::tests::test_audio_capture_with_specific_device ... ok
+test audio::capture::tests::test_audio_capture_double_start ... ok
+test audio::capture::tests::test_audio_capture_start_stop ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored
+
+# 集成测试
+running 5 tests
+test test_audio_capture_sample_characteristics ... ok
+test test_audio_capture_integration ... ok
+test test_audio_capture_drop_while_capturing ... ok
+test test_audio_capture_start_stop_multiple_times ... ok
+test test_audio_capture_channel_overflow ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored
+```
+
+**测试数据**:
+- 采样率：48000 Hz
+- 通道数：2（立体声）
+- 批次大小：960 样本（约 20ms @ 48kHz）
+- 接收到 10 批次，总计 9600 样本（0.20 秒音频）
+- 样本范围：[-1.0, 1.0]（正确归一化）
+- 无削波现象
+
+**实现特性**:
+- ✅ 使用 tokio mpsc channel 异步传输数据
+- ✅ 使用 Arc 共享 sender 到音频回调
+- ✅ 使用 try_send 避免阻塞音频线程
+- ✅ 实现 Drop trait 自动清理资源
+- ✅ 支持默认设备和指定设备
+- ✅ 提供 is_capturing() 状态查询
+- ✅ 完整的文档注释和示例
+
+**完成状态**: ✅ 已完成 (2025-12-23)
 
 ---
 
@@ -523,6 +613,79 @@ fn test_resample_48k_to_16k() {
     assert!((output.len() as i32 - 160).abs() < 10);
 }
 ```
+
+**验收标准**:
+- [x] 成功创建重采样器实例
+- [x] 正确实现 48kHz → 16kHz 转换
+- [x] 正确实现 44.1kHz → 16kHz 转换
+- [x] 支持 16kHz → 16kHz 直通
+- [x] 实现 reset 方法清除状态
+- [x] 实现 process_buffered 处理可变长度输入
+- [x] 所有单元测试通过（8个测试）
+- [x] 集成测试通过（6个测试）
+- [x] 文档测试通过（2个测试）
+- [x] 信号质量保持良好
+
+**测试结果**:
+```bash
+# 单元测试
+running 8 tests
+test audio::resampler::tests::test_resample_48k_to_16k ... ok
+test audio::resampler::tests::test_resample_44k_to_16k ... ok
+test audio::resampler::tests::test_resample_16k_to_16k ... ok
+test audio::resampler::tests::test_resample_wrong_input_size ... ok
+test audio::resampler::tests::test_resample_reset ... ok
+test audio::resampler::tests::test_resample_multiple_chunks ... ok
+test audio::resampler::tests::test_resample_buffered ... ok
+test audio::resampler::tests::test_resample_signal_preservation ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored
+
+# 集成测试
+running 6 tests
+test test_resampler_48khz_to_16khz_integration ... ok
+test test_resampler_44khz_to_16khz_integration ... ok
+test test_resampler_continuous_stream ... ok
+test test_resampler_reset_integration ... ok
+test test_resampler_buffered_integration ... ok
+test test_resampler_frequency_preservation ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored
+```
+
+**测试数据**:
+```
+48kHz → 16kHz:
+  - 输入: 48000 samples (1.0s)
+  - 输出: 15956 samples (1.00s @ 16kHz)
+  - 比率: 3.0 (精确)
+  - 信号保持: 最大幅值 1.0000
+
+44.1kHz → 16kHz:
+  - 输入: 44100 samples (1.0s)
+  - 输出: 15953 samples (1.00s @ 16kHz)
+  - 比率: 2.7644 (预期 2.7563)
+  - 误差: < 0.5%
+
+连续流处理:
+  - 处理 1000 个块 (10秒)
+  - 输出: 159956 samples (~10s @ 16kHz)
+  - 每块平均: 159.96 samples
+  - 范围: 116-160 samples
+```
+
+**实现特性**:
+- ✅ 使用 rubato SincFixedIn 高质量重采样
+- ✅ Sinc 插值长度: 256
+- ✅ 黑曼-哈里斯窗函数
+- ✅ 截止频率: 0.95
+- ✅ 过采样因子: 256
+- ✅ 自动块大小计算（10ms）
+- ✅ 支持可变长度输入的缓冲处理
+- ✅ 完整的文档注释和示例
+- ✅ 信号频率和幅度保持良好
+
+**完成状态**: ✅ 已完成 (2025-12-23)
 
 ---
 

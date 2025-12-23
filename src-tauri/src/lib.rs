@@ -1,3 +1,6 @@
+/// Audio processing modules
+pub mod audio;
+
 /// Utility modules
 pub mod utils;
 
