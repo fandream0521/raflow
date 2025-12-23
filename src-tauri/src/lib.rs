@@ -1,6 +1,12 @@
 /// Audio processing modules
 pub mod audio;
 
+/// Network communication modules
+pub mod network;
+
+/// End-to-end transcription session management
+pub mod transcription;
+
 /// Utility modules
 pub mod utils;
 
