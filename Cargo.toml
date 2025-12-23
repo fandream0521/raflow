@@ -1,0 +1,54 @@
+[workspace]
+members = ["src-tauri"]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+repository = "https://github.com/user/raflow"
+
+[workspace.dependencies]
+# Tauri
+tauri = { version = "2.9", features = ["tray-icon"] }
+tauri-build = "2.0"
+tauri-plugin-global-shortcut = "2.3"
+tauri-plugin-clipboard-manager = "2.3"
+tauri-plugin-dialog = "2.2"
+tauri-plugin-fs = "2.2"
+tauri-plugin-shell = "2.2"
+
+# Async Runtime
+tokio = { version = "1.42", features = ["full"] }
+
+# WebSocket
+tokio-tungstenite = { version = "0.28", features = ["rustls-tls-native-roots"] }
+futures-util = "0.3"
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Audio
+cpal = "0.15"
+rubato = "0.16"
+
+# Encoding
+base64 = "0.22"
+
+# Input Simulation
+enigo = "0.6"
+
+# Window Detection
+x-win = "5.3"
+
+# State Management
+arc-swap = "1.7"
+
+# Error Handling
+thiserror = "2.0"
+anyhow = "1.0"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }

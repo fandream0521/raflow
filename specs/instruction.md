@@ -7,4 +7,4 @@
 根据 @specs/0002-design.md 的内容进行生成 implementation plan，保存到 ./specs/0003-implementation-plan.md
 
 ## 实现
-根据 @specs/0002-design.md 和 @specs/0003-implementation-plan.md 文件中的设计，完整实现 P0-T1
+根据 @specs/0002-design.md 和 @specs/0003-implementation-plan.md 文件中的设计，完整实现 P0-T3

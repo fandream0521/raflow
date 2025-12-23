@@ -1,21 +1,9 @@
-use tracing_subscriber::{fmt, prelude::*, EnvFilter};
-
-/// Initialize logging with tracing
-fn init_logging() {
-    let filter = EnvFilter::try_from_default_env()
-        .unwrap_or_else(|_| EnvFilter::new("raflow=debug,warn"));
-
-    tracing_subscriber::registry()
-        .with(fmt::layer())
-        .with(filter)
-        .init();
-
-    tracing::info!("RaFlow logging initialized");
-}
+/// Utility modules
+pub mod utils;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    init_logging();
+    utils::logging::init_logging();
 
     tauri::Builder::default()
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
