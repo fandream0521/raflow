@@ -1,8 +1,23 @@
 /// Audio processing modules
 pub mod audio;
 
+/// Tauri commands
+pub mod commands;
+
+/// Hotkey management modules
+pub mod hotkey;
+
+/// Input injection and window detection modules
+pub mod input;
+
 /// Network communication modules
 pub mod network;
+
+/// State management modules
+pub mod state;
+
+/// RaFlow session management (complete flow integration)
+pub mod session;
 
 /// End-to-end transcription session management
 pub mod transcription;
