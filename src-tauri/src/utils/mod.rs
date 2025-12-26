@@ -1,8 +1,11 @@
 /// Logging utilities
 pub mod logging;
 
-// Error handling utilities will be implemented in Phase 4
-// pub mod error;
+/// Global error handling
+pub mod error;
+
+// Re-export commonly used types
+pub use error::{AppError, AppResult, ErrorCode, ErrorContext};
 
 #[cfg(test)]
 mod logging_test;

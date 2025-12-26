@@ -13,14 +13,36 @@
     "windows": [
       {
         "label": "main",
-        "title": "RaFlow",
+        "title": "RaFlow Settings",
         "width": 600,
         "height": 400,
-        "visible": true,
+        "visible": false,
         "center": true,
-        "resizable": true
+        "resizable": true,
+        "minWidth": 400,
+        "minHeight": 300
+      },
+      {
+        "label": "overlay",
+        "title": "",
+        "width": 400,
+        "height": 120,
+        "decorations": false,
+        "transparent": true,
+        "alwaysOnTop": true,
+        "skipTaskbar": true,
+        "visible": false,
+        "focus": false,
+        "resizable": false,
+        "center": true,
+        "url": "overlay.html"
       }
     ],
+    "trayIcon": {
+      "iconPath": "icons/icon.png",
+      "iconAsTemplate": true,
+      "menuOnLeftClick": false
+    },
     "security": {
       "csp": null
     }

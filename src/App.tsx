@@ -1,10 +1,8 @@
+import { Settings } from "./components/Settings";
+import "./components/Settings/Settings.css";
+
 function App() {
-  return (
-    <main className="container">
-      <h1>RaFlow</h1>
-      <p>Real-time Speech-to-Text System</p>
-    </main>
-  );
+  return <Settings />;
 }
 
 export default App;

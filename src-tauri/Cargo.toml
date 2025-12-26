@@ -29,6 +29,7 @@ serde_json = { workspace = true }
 
 cpal = { workspace = true }
 rubato = { workspace = true }
+ringbuf = { workspace = true }
 base64 = { workspace = true }
 
 enigo = { workspace = true }

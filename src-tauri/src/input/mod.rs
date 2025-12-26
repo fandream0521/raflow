@@ -9,6 +9,7 @@
 //! - [`keyboard`] - 键盘模拟功能
 //! - [`clipboard`] - 剪贴板操作功能
 //! - [`injector`] - 文本注入器（整合键盘和剪贴板）
+//! - [`platform`] - 平台特定实现
 //!
 //! # 功能概述
 //!
@@ -18,6 +19,7 @@
 //! 2. **键盘模拟** - 模拟键盘输入，将转写结果注入到目标应用
 //! 3. **剪贴板操作** - 通过剪贴板进行文本传输，支持保存和恢复
 //! 4. **文本注入器** - 统一接口，自动选择最佳注入方式
+//! 5. **平台适配** - 平台特定功能（权限检测、显示服务器等）
 //!
 //! # 使用示例
 //!
@@ -53,6 +55,18 @@
 //! clipboard.restore()?;  // 恢复原有内容
 //! ```
 //!
+//! ## 平台功能
+//!
+//! ```ignore
+//! use raflow_lib::input::platform;
+//!
+//! // 检查辅助功能权限（macOS）
+//! let status = platform::check_accessibility_permission();
+//!
+//! // 获取平台能力
+//! let caps = platform::PlatformCapabilities::current();
+//! ```
+//!
 //! # 平台支持
 //!
 //! | 平台 | 窗口检测 | 键盘模拟 | 剪贴板 |
@@ -68,6 +82,7 @@ pub mod clipboard;
 pub mod error;
 pub mod injector;
 pub mod keyboard;
+pub mod platform;
 pub mod window;
 
 // Re-export commonly used types
@@ -75,6 +90,10 @@ pub use clipboard::{read_from_clipboard, write_to_clipboard, ClipboardManager};
 pub use error::{InputError, InputResult};
 pub use injector::{InjectionResult, InjectionStrategy, TextInjector, AUTO_STRATEGY_THRESHOLD, PASTE_DELAY_MS};
 pub use keyboard::KeyboardSimulator;
+pub use platform::{
+    check_accessibility_permission, request_accessibility_permission, PermissionStatus,
+    Platform, PlatformCapabilities, SystemInfo,
+};
 pub use window::{
     format_window_info, get_focused_app_name, get_focused_window, get_focused_window_title,
     has_focused_window, is_text_input_context, WindowInfo,

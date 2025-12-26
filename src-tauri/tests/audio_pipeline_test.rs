@@ -2,11 +2,10 @@
 ///
 /// This test file validates the complete audio processing pipeline,
 /// from capture through resampling to Base64-encoded output.
-
-use base64::{engine::general_purpose::STANDARD, Engine};
+use base64::{Engine, engine::general_purpose::STANDARD};
 use raflow_lib::audio::AudioPipeline;
 use tokio::sync::mpsc;
-use tokio::time::{timeout, Duration};
+use tokio::time::{Duration, timeout};
 
 #[tokio::test]
 async fn test_pipeline_creation() {
@@ -107,10 +106,7 @@ async fn test_pipeline_audio_output() {
     println!("\n=== Summary ===");
     println!("Total chunks received: {}", chunks_received);
     println!("Total samples: {}", total_samples);
-    println!(
-        "Total duration: {:.2}s",
-        total_samples as f64 / 16000.0
-    );
+    println!("Total duration: {:.2}s", total_samples as f64 / 16000.0);
 
     // We should receive at least some chunks if there's audio input
     // (might be 0 if no microphone or silent environment)
@@ -155,7 +151,10 @@ async fn test_pipeline_output_format() {
 
         println!("Samples: {}", samples.len());
         println!("Sample rate: 16000 Hz");
-        println!("Duration: {:.1}ms", (samples.len() as f64 / 16000.0) * 1000.0);
+        println!(
+            "Duration: {:.1}ms",
+            (samples.len() as f64 / 16000.0) * 1000.0
+        );
 
         // Check sample range (should be i16: -32768 to 32767)
         let min_sample = samples.iter().min().unwrap();
@@ -222,7 +221,10 @@ async fn test_pipeline_continuous_operation() {
         }
 
         println!("\nTotal duration: {:.2}s", total_duration / 1000.0);
-        println!("Average chunk duration: {:.1}ms", total_duration / chunks.len() as f64);
+        println!(
+            "Average chunk duration: {:.1}ms",
+            total_duration / chunks.len() as f64
+        );
 
         // Each chunk should be around 100ms
         let avg_duration = total_duration / chunks.len() as f64;

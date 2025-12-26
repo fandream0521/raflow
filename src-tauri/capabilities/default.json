@@ -9,6 +9,11 @@
     "core:window:allow-hide",
     "core:window:allow-set-focus",
     "core:window:allow-center",
+    "core:window:allow-close",
+    "core:window:allow-is-visible",
+    "core:event:allow-listen",
+    "core:event:allow-emit",
+    "core:path:allow-resolve-directory",
     "global-shortcut:allow-register",
     "global-shortcut:allow-unregister",
     "global-shortcut:allow-is-registered",
@@ -18,6 +23,12 @@
     "dialog:allow-ask",
     "fs:allow-read-text-file",
     "fs:allow-write-text-file",
+    "fs:allow-exists",
+    "fs:allow-mkdir",
+    "fs:allow-appconfig-read",
+    "fs:allow-appconfig-write",
+    "fs:allow-appconfig-read-recursive",
+    "fs:allow-appconfig-write-recursive",
     "shell:allow-open"
   ]
 }
